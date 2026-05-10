@@ -12,17 +12,10 @@
 <title>PlanMess</title>
 <style>
   :root{
-    --bg:#0e1116;
-    --bg-2:#161b22;
-    --bg-3:#1f2630;
-    --line:#2a3340;
-    --fg:#e6edf3;
-    --fg-dim:#8b97a8;
-    --accent:#ff6a00;
-    --accent-2:#ffb060;
-    --ok:#3fb950;
-    --warn:#d29922;
-    --err:#f85149;
+    --bg:#0e1116; --bg-2:#161b22; --bg-3:#1f2630;
+    --line:#2a3340; --fg:#e6edf3; --fg-dim:#8b97a8;
+    --accent:#ff6a00; --accent-2:#ffb060;
+    --ok:#3fb950; --warn:#d29922; --err:#f85149;
     --mono:'JetBrains Mono','SF Mono',ui-monospace,Menlo,Consolas,monospace;
     --sans:'Inter',ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
   }
@@ -34,41 +27,31 @@
 
   #app{position:fixed;inset:0;display:grid;grid-template-rows:auto 1fr auto}
 
-  /* Top bar */
   .topbar{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg-2);border-bottom:1px solid var(--line);z-index:10}
   .brand{font-family:var(--mono);font-weight:700;letter-spacing:.5px;font-size:13px;color:var(--accent);padding-right:8px;border-right:1px solid var(--line);margin-right:4px}
   .brand span{color:var(--fg-dim);font-weight:500}
   .topbar .file-name{font-family:var(--mono);font-size:12px;color:var(--fg-dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0}
   .icon-btn{width:38px;height:38px;display:inline-flex;align-items:center;justify-content:center;border-radius:6px;color:var(--fg);transition:background .12s}
   .icon-btn:hover,.icon-btn:active{background:var(--bg-3)}
-  .icon-btn.danger:hover{background:#3a1d1d;color:var(--err)}
   .icon-btn svg{width:20px;height:20px}
 
-  /* Canvas area */
-  .canvas-wrap{position:relative;overflow:hidden;background:#0a0d11;background-image:
-    linear-gradient(#161b22 1px,transparent 1px),
-    linear-gradient(90deg,#161b22 1px,transparent 1px);
-    background-size:24px 24px;background-position:-1px -1px}
-  #pdfCanvas,#drawCanvas{position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform;image-rendering:crisp-edges}
+  .canvas-wrap{position:relative;overflow:hidden;background:#0a0d11;background-image:linear-gradient(#161b22 1px,transparent 1px),linear-gradient(90deg,#161b22 1px,transparent 1px);background-size:24px 24px;background-position:-1px -1px;touch-action:none;contain:strict}
+  #pdfCanvas,#drawCanvas{position:absolute;left:0;top:0;width:100%;height:100%;display:block}
   #drawCanvas{pointer-events:none}
   .canvas-wrap.empty::before{content:"PDF laden, um zu beginnen";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--fg-dim);font-family:var(--mono);font-size:13px;letter-spacing:.5px;pointer-events:none}
 
-  /* Loupe */
   #loupe{position:absolute;width:180px;height:180px;border-radius:50%;border:2px solid var(--accent);box-shadow:0 4px 20px rgba(0,0,0,.6);overflow:hidden;display:none;pointer-events:none;background:#0a0d11;z-index:5}
   #loupe canvas{position:absolute;left:0;top:0}
   #loupe::after{content:"";position:absolute;left:50%;top:50%;width:18px;height:18px;transform:translate(-50%,-50%);border:1.5px solid var(--accent);border-radius:50%}
   #loupe::before{content:"";position:absolute;left:50%;top:50%;width:1px;height:100%;background:rgba(255,106,0,.4);transform:translateX(-50%)}
   #loupeCross{position:absolute;left:0;top:50%;width:100%;height:1px;background:rgba(255,106,0,.4)}
 
-  /* Status overlay */
   .status{position:absolute;top:10px;left:10px;font-family:var(--mono);font-size:11px;background:rgba(14,17,22,.85);backdrop-filter:blur(6px);border:1px solid var(--line);padding:6px 10px;border-radius:4px;color:var(--fg-dim);letter-spacing:.3px;pointer-events:none;z-index:4}
   .status b{color:var(--fg);font-weight:600}
   .status .accent{color:var(--accent-2)}
-
   .hint{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:11px;background:rgba(255,106,0,.12);border:1px solid var(--accent);color:var(--accent-2);padding:6px 12px;border-radius:4px;pointer-events:none;z-index:4;display:none;letter-spacing:.3px}
   .hint.show{display:block}
 
-  /* Bottom toolbar */
   .toolbar{display:flex;gap:4px;padding:8px;background:var(--bg-2);border-top:1px solid var(--line);overflow-x:auto;align-items:center;z-index:10}
   .tool{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-width:64px;height:54px;padding:4px 8px;border-radius:6px;color:var(--fg-dim);transition:all .12s;border:1px solid transparent}
   .tool:hover{color:var(--fg);background:var(--bg-3)}
@@ -77,7 +60,6 @@
   .tool .lbl{font-size:10px;font-family:var(--mono);letter-spacing:.3px;text-transform:uppercase}
   .divider{width:1px;height:32px;background:var(--line);margin:0 4px;flex-shrink:0}
 
-  /* Modals */
   .scrim{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:100;padding:20px}
   .scrim.show{display:flex}
   .panel{background:var(--bg-2);border:1px solid var(--line);border-radius:8px;padding:20px;max-width:420px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.5)}
@@ -90,29 +72,21 @@
   .btn{padding:9px 14px;border-radius:5px;font-size:13px;font-family:var(--mono);letter-spacing:.3px;transition:all .12s;border:1px solid var(--line);background:var(--bg-3)}
   .btn:hover{border-color:var(--fg-dim)}
   .btn.primary{background:var(--accent);color:#0e1116;border-color:var(--accent);font-weight:600}
-  .btn.primary:hover{background:var(--accent-2);border-color:var(--accent-2)}
   .btn.danger{color:var(--err);border-color:#3a1d1d}
-  .btn.danger:hover{background:#3a1d1d}
-  .btn:disabled{opacity:.4;cursor:not-allowed}
 
-  /* Layer list */
   .layers{display:flex;flex-direction:column;gap:6px;margin-top:6px}
   .layer-row{display:flex;align-items:center;gap:8px;padding:8px;background:var(--bg-3);border:1px solid var(--line);border-radius:5px}
   .layer-row.active{border-color:var(--accent)}
-  .layer-swatch{width:24px;height:24px;border-radius:4px;flex-shrink:0;cursor:pointer;border:1px solid rgba(255,255,255,.1)}
+  .layer-swatch{width:24px;height:24px;border-radius:4px;flex-shrink:0;border:1px solid rgba(255,255,255,.1)}
   .layer-name{flex:1;background:transparent;border:none;padding:2px 4px;font-size:13px;color:var(--fg);min-width:0}
-  .layer-vis{width:28px;height:28px;display:flex;align-items:center;justify-content:center;color:var(--fg-dim);border-radius:4px}
-  .layer-vis.hidden{color:var(--bg-3);background:var(--bg)}
-  .layer-vis svg{width:16px;height:16px}
-  .layer-del{color:var(--fg-dim);width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:4px}
+  .layer-vis,.layer-del{width:28px;height:28px;display:flex;align-items:center;justify-content:center;color:var(--fg-dim);border-radius:4px}
+  .layer-vis svg,.layer-del svg{width:16px;height:16px}
   .layer-del:hover{color:var(--err);background:#3a1d1d}
 
-  /* Color picker */
   .colors{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
   .color-dot{width:32px;height:32px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:transform .1s}
   .color-dot.selected{border-color:var(--fg);transform:scale(1.1)}
 
-  /* Measurement list */
   .meas-list{display:flex;flex-direction:column;gap:4px;max-height:300px;overflow-y:auto;margin-top:6px}
   .meas-item{display:flex;align-items:center;gap:8px;padding:6px 8px;background:var(--bg-3);border:1px solid var(--line);border-radius:4px;font-family:var(--mono);font-size:12px}
   .meas-item .col{width:8px;height:8px;border-radius:50%;flex-shrink:0}
@@ -122,7 +96,6 @@
   .meas-item button:hover{color:var(--err)}
 
   .info-text{font-size:11px;color:var(--fg-dim);font-family:var(--mono);line-height:1.5;margin:8px 0}
-
   .scale-display{font-family:var(--mono);font-size:13px;background:var(--bg-3);padding:8px 10px;border-radius:4px;border:1px solid var(--line);color:var(--fg)}
   .scale-display .num{color:var(--accent-2);font-weight:600}
   .scale-display .uncalibrated{color:var(--err)}
@@ -133,47 +106,37 @@
 
   .file-input{display:none}
 
-  /* Toast */
   .toast{position:fixed;top:60px;left:50%;transform:translateX(-50%) translateY(-20px);background:var(--bg-3);border:1px solid var(--accent);color:var(--fg);padding:10px 16px;border-radius:5px;font-size:13px;font-family:var(--mono);opacity:0;transition:all .25s;z-index:200;pointer-events:none;letter-spacing:.3px}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-  .toast.err{border-color:var(--err)}
-  .toast.ok{border-color:var(--ok)}
+  .toast.err{border-color:var(--err)} .toast.ok{border-color:var(--ok)}
 
-  /* Spinner */
   .spinner{position:absolute;inset:0;background:rgba(14,17,22,.85);display:none;align-items:center;justify-content:center;z-index:50;font-family:var(--mono);font-size:13px;color:var(--fg-dim);letter-spacing:.5px}
   .spinner.show{display:flex;flex-direction:column;gap:14px}
   .spinner::before{content:"";width:32px;height:32px;border:2px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
   @keyframes spin{to{transform:rotate(360deg)}}
 
-  /* Page selector */
   .page-ctrl{display:flex;align-items:center;gap:4px;background:var(--bg-3);border:1px solid var(--line);border-radius:5px;padding:2px}
   .page-ctrl button{width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:3px;color:var(--fg-dim)}
-  .page-ctrl button:hover:not(:disabled){background:var(--bg);color:var(--fg)}
   .page-ctrl button:disabled{opacity:.3}
   .page-ctrl span{font-family:var(--mono);font-size:11px;padding:0 6px;color:var(--fg);min-width:54px;text-align:center}
+
+  .qbadge{position:absolute;top:10px;right:10px;font-family:var(--mono);font-size:10px;background:rgba(14,17,22,.85);border:1px solid var(--line);padding:4px 8px;border-radius:4px;color:var(--fg-dim);pointer-events:none;z-index:4;display:none}
+  .qbadge.show{display:block}
+  .qbadge.rendering{border-color:var(--accent);color:var(--accent-2)}
 </style>
 </head>
 <body>
 <div id="app">
-
   <header class="topbar">
     <div class="brand">PLAN<span>MESS</span></div>
     <div class="file-name" id="fileName">Keine Datei</div>
     <div class="page-ctrl" id="pageCtrl" style="display:none">
-      <button id="pagePrev" aria-label="Vorherige Seite">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
-      </button>
+      <button id="pagePrev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg></button>
       <span id="pageLabel">1 / 1</span>
-      <button id="pageNext" aria-label="Nächste Seite">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
-      </button>
+      <button id="pageNext"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button>
     </div>
-    <button class="icon-btn" id="btnOpen" title="PDF öffnen" aria-label="PDF öffnen">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-    </button>
-    <button class="icon-btn" id="btnFit" title="Auf Bildschirm einpassen" aria-label="Einpassen">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/></svg>
-    </button>
+    <button class="icon-btn" id="btnOpen"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></button>
+    <button class="icon-btn" id="btnFit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/></svg></button>
   </header>
 
   <div class="canvas-wrap empty" id="canvasWrap">
@@ -181,82 +144,45 @@
     <canvas id="drawCanvas"></canvas>
     <div id="loupe"><canvas id="loupeCanvas"></canvas><div id="loupeCross"></div></div>
     <div class="status" id="status"></div>
+    <div class="qbadge" id="qBadge">Standard</div>
     <div class="hint" id="hint"></div>
     <div class="spinner" id="spinner">PDF wird geladen…</div>
   </div>
 
   <nav class="toolbar">
-    <button class="tool active" data-tool="pan">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>
-      <span class="lbl">Hand</span>
-    </button>
-    <button class="tool" data-tool="line">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="19" x2="19" y2="5"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="5" r="2"/></svg>
-      <span class="lbl">Linie</span>
-    </button>
-    <button class="tool" data-tool="poly">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 19 12 5 19 19 5 19"/></svg>
-      <span class="lbl">Fläche</span>
-    </button>
-    <button class="tool" data-tool="angle">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19 L19 19 L5 5 z" opacity=".15"/><path d="M5 19 L19 19"/><path d="M5 19 L5 5"/><path d="M5 13 a 6 6 0 0 1 6 6"/></svg>
-      <span class="lbl">Winkel</span>
-    </button>
-    <button class="tool" data-tool="edit">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-      <span class="lbl">Edit</span>
-    </button>
+    <button class="tool active" data-tool="pan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg><span class="lbl">Hand</span></button>
+    <button class="tool" data-tool="line"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="19" x2="19" y2="5"/><circle cx="5" cy="19" r="2"/><circle cx="19" cy="5" r="2"/></svg><span class="lbl">Linie</span></button>
+    <button class="tool" data-tool="poly"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 19 12 5 19 19 5 19"/></svg><span class="lbl">Fläche</span></button>
+    <button class="tool" data-tool="angle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 19 L19 19"/><path d="M5 19 L5 5"/><path d="M5 13 a 6 6 0 0 1 6 6"/></svg><span class="lbl">Winkel</span></button>
+    <button class="tool" data-tool="edit"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg><span class="lbl">Edit</span></button>
     <div class="divider"></div>
-    <button class="tool" id="btnCalibrate">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h2"/><path d="M6 8v4"/><path d="M10 6v6"/><path d="M14 8v4"/><path d="M18 4v8"/><path d="M22 12h-2"/><path d="M2 12 22 12"/></svg>
-      <span class="lbl">Maßstab</span>
-    </button>
-    <button class="tool" id="btnLayers">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
-      <span class="lbl">Layer</span>
-    </button>
-    <button class="tool" id="btnList">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
-      <span class="lbl">Liste</span>
-    </button>
+    <button class="tool" id="btnCalibrate"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h2"/><path d="M6 8v4"/><path d="M10 6v6"/><path d="M14 8v4"/><path d="M18 4v8"/><path d="M22 12h-2"/><path d="M2 12 22 12"/></svg><span class="lbl">Maßstab</span></button>
+    <button class="tool" id="btnLayers"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg><span class="lbl">Layer</span></button>
+    <button class="tool" id="btnList"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg><span class="lbl">Liste</span></button>
     <div class="divider"></div>
-    <button class="tool" id="btnUndo">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6.7 2.95L3 13"/></svg>
-      <span class="lbl">Undo</span>
-    </button>
-    <button class="tool" id="btnSnap">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/></svg>
-      <span class="lbl" id="snapLbl">Snap</span>
-    </button>
+    <button class="tool" id="btnUndo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6.7 2.95L3 13"/></svg><span class="lbl">Undo</span></button>
+    <button class="tool active" id="btnSnap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/></svg><span class="lbl" id="snapLbl">Snap</span></button>
   </nav>
 </div>
 
 <input type="file" id="fileInput" class="file-input" accept="application/pdf,.pdf" />
 <div class="toast" id="toast"></div>
 
-<!-- Calibrate modal -->
 <div class="scrim" id="calModal">
   <div class="panel">
     <h2>Maßstab</h2>
     <div class="scale-display" id="scaleDisplay">Nicht kalibriert</div>
     <h3>Manuell setzen</h3>
     <div class="seg" style="margin-bottom:8px">
-      <button class="active" data-scale="50">1:50</button>
+      <button data-scale="50">1:50</button>
       <button data-scale="100">1:100</button>
       <button data-scale="200">1:200</button>
       <button data-scale="500">1:500</button>
     </div>
-    <div class="row">
-      <label>Maßstab 1:</label>
-      <input type="number" id="manualScale" min="1" placeholder="z. B. 50" />
-    </div>
-    <div class="row">
-      <label>PDF-DPI:</label>
-      <input type="number" id="manualDpi" min="1" value="72" placeholder="Standard 72" />
-    </div>
-    <p class="info-text">Der Maßstab beschreibt das Verhältnis Plan zu Realität. Bei einem 1:50-Plan, der mit 72 DPI erstellt wurde, gilt: 1 PDF-Punkt = 50/72 cm in echt.</p>
-    <h3>Oder: per Strecke kalibrieren</h3>
-    <p class="info-text">Eine bekannte Länge im Plan abmessen und reale Distanz eintragen.</p>
+    <div class="row"><label>Maßstab 1:</label><input type="number" id="manualScale" min="1" placeholder="z. B. 50" /></div>
+    <div class="row"><label>PDF-DPI:</label><input type="number" id="manualDpi" min="1" value="72" /></div>
+    <p class="info-text">Bei 1:50-Plan mit 72 DPI: 1 PDF-Punkt = 50/72 cm in echt. DPI ist egal, wenn du per Strecke kalibrierst.</p>
+    <h3>Per Strecke kalibrieren</h3>
     <button class="btn primary" id="btnCalibrateLine" style="width:100%">Strecke im Plan abmessen</button>
     <div class="btns">
       <button class="btn" id="calClose">Schließen</button>
@@ -265,113 +191,100 @@
   </div>
 </div>
 
-<!-- Calibration step modal -->
 <div class="scrim" id="calStepModal">
   <div class="panel">
     <h2>Reale Länge</h2>
-    <p class="info-text">Wie lang ist diese Strecke in der Realität?</p>
     <div class="row">
       <label>Länge:</label>
       <input type="number" id="calRealLength" step="0.001" min="0.001" placeholder="z. B. 5.92" />
-      <select id="calUnit" style="background:var(--bg-3);color:var(--fg);border:1px solid var(--line);padding:6px;border-radius:4px">
-        <option value="m">m</option>
-        <option value="cm">cm</option>
-        <option value="mm">mm</option>
-      </select>
+      <select id="calUnit" style="background:var(--bg-3);color:var(--fg);border:1px solid var(--line);padding:6px;border-radius:4px"><option value="m">m</option><option value="cm">cm</option><option value="mm">mm</option></select>
     </div>
-    <div class="btns">
-      <button class="btn" id="calStepCancel">Abbrechen</button>
-      <button class="btn primary" id="calStepApply">Übernehmen</button>
-    </div>
+    <div class="btns"><button class="btn" id="calStepCancel">Abbrechen</button><button class="btn primary" id="calStepApply">Übernehmen</button></div>
   </div>
 </div>
 
-<!-- Layers modal -->
 <div class="scrim" id="layerModal">
   <div class="panel">
     <h2>Ebenen</h2>
     <div class="layers" id="layerList"></div>
-    <div class="btns">
-      <button class="btn" id="btnAddLayer">+ Neue Ebene</button>
-      <button class="btn primary" id="layerClose">Fertig</button>
-    </div>
+    <div class="btns"><button class="btn" id="btnAddLayer">+ Neue Ebene</button><button class="btn primary" id="layerClose">Fertig</button></div>
     <h3>Farbe für aktive Ebene</h3>
     <div class="colors" id="colorPalette"></div>
   </div>
 </div>
 
-<!-- Measurements list modal -->
 <div class="scrim" id="listModal">
   <div class="panel">
     <h2>Messungen</h2>
     <div id="measSummary" class="info-text"></div>
     <div class="meas-list" id="measList"></div>
-    <div class="btns">
-      <button class="btn danger" id="btnClearAll">Alle löschen</button>
-      <button class="btn" id="btnExport">Export</button>
-      <button class="btn primary" id="listClose">Schließen</button>
-    </div>
+    <div class="btns"><button class="btn danger" id="btnClearAll">Alle löschen</button><button class="btn" id="btnExport">Export</button><button class="btn primary" id="listClose">Schließen</button></div>
   </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.min.mjs" type="module"></script>
 <script type="module">
-  // === PDF.js setup =========================================================
+  // ===========================================================================
+  // RENDER STRATEGY (rewrite v2)
+  // -------------------------------------------------------------------------
+  // Two viewport-sized canvases (pdfCanvas + drawCanvas).
+  // PDF is rendered into an OFFSCREEN canvas ONLY for the currently visible
+  // PDF region, at the current zoom. While the user pans/zooms, we just blit
+  // the offscreen onto the visible PDF canvas with a transform — no PDF.js
+  // re-rendering on each frame, no CSS scaling on a giant canvas.
+  // After interaction settles, we re-render the offscreen at the new zoom
+  // for crispness. This avoids the lag the previous approach had.
+  // ===========================================================================
   const pdfjsLib = await import('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.min.mjs');
   pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.worker.min.mjs';
 
-  // === DOM refs =============================================================
   const $ = id => document.getElementById(id);
   const wrap = $('canvasWrap');
   const pdfCv = $('pdfCanvas');
   const drawCv = $('drawCanvas');
-  const pdfCtx = pdfCv.getContext('2d');
-  const drawCtx = drawCv.getContext('2d');
+  const pdfCtx = pdfCv.getContext('2d', { alpha: true });
+  const drawCtx = drawCv.getContext('2d', { alpha: true });
   const loupe = $('loupe');
   const loupeCv = $('loupeCanvas');
-  const loupeCtx = loupeCv.getContext('2d');
+  const loupeCtx = loupeCv.getContext('2d', { alpha: false });
   const fileInput = $('fileInput');
   const status = $('status');
   const hint = $('hint');
   const spinner = $('spinner');
   const toastEl = $('toast');
+  const qBadge = $('qBadge');
 
-  // === State ================================================================
+  const offscreen = document.createElement('canvas');
+  const offCtx = offscreen.getContext('2d', { alpha: true });
+
   const state = {
-    pdf: null,
-    pdfName: '',
-    pdfData: null, // ArrayBuffer for re-rendering on zoom
-    pageNum: 1,
-    pageCount: 1,
-    pageBaseViewport: null, // viewport at scale 1 (PDF points)
-    renderScale: 2, // CSS pixels per PDF point
-    view: { tx: 0, ty: 0, zoom: 1 }, // pan/zoom in screen pixels
+    pdf: null, pdfName: '',
+    pageNum: 1, pageCount: 1, page: null,
+    pageBaseViewport: null,
+    view: { tx: 0, ty: 0, zoom: 1 },
+    off: { zoom: 1, originX: 0, originY: 0, scaleDown: 1, ready: false },
+    renderInFlight: null,
+    pendingRender: false,
+    rerenderTimer: 0,
     tool: 'pan',
     snap: true,
-    snapDist: 16, // screen pixels
-    // Scale: 1 PDF point = (scaleNum / scaleDpi) cm in real world
-    scaleNum: null, // e.g. 50 for 1:50
+    snapDist: 18,
+    scaleNum: null,
     scaleDpi: 72,
-    // pixelsPerMeter in PDF coords (computed from scaleNum)
-    measurements: [], // {id,type,layerId,points:[{x,y}],closed?}
-    layers: [
-      { id: 'l1', name: 'Ebene 1', color: '#ff6a00', visible: true }
-    ],
+    measurements: [],
+    layers: [{ id: 'l1', name: 'Ebene 1', color: '#ff6a00', visible: true }],
     activeLayer: 'l1',
-    // In-progress drawing
     draft: null,
-    // Edit state
-    drag: null, // {measId,pointIdx}
-    // Calibration mode
+    drag: null,
     calibrating: false,
     calLine: null,
-    // Pointer tracking
     pointers: new Map(),
-    pinchStart: null,
+    pinch: null,
     panStart: null,
     lastTap: 0,
-    // History
-    history: []
+    history: [],
+    dpr: Math.min(window.devicePixelRatio || 1, 2),
+    drawScheduled: false,
+    pendingMove: null
   };
 
   const PALETTE = ['#ff6a00','#3fb950','#58a6ff','#d29922','#f85149','#bc8cff','#ff79c6','#8be9fd','#e6edf3','#8b97a8'];
@@ -379,27 +292,20 @@
   // === Persistence ==========================================================
   function saveSession(){
     try{
-      const data = {
-        pdfName: state.pdfName,
-        pageNum: state.pageNum,
-        scaleNum: state.scaleNum,
-        scaleDpi: state.scaleDpi,
-        measurements: state.measurements,
-        layers: state.layers,
-        activeLayer: state.activeLayer,
-        snap: state.snap
-      };
-      localStorage.setItem('planmess_session', JSON.stringify(data));
+      localStorage.setItem('planmess_session', JSON.stringify({
+        pdfName: state.pdfName, scaleNum: state.scaleNum, scaleDpi: state.scaleDpi,
+        measurements: state.measurements, layers: state.layers,
+        activeLayer: state.activeLayer, snap: state.snap
+      }));
     }catch(e){}
   }
   function loadSession(){
     try{
-      const raw = localStorage.getItem('planmess_session');
-      if(!raw) return;
-      const d = JSON.parse(raw);
+      const d = JSON.parse(localStorage.getItem('planmess_session')||'null');
+      if(!d) return;
       if(d.scaleNum) state.scaleNum = d.scaleNum;
       if(d.scaleDpi) state.scaleDpi = d.scaleDpi;
-      if(d.layers && d.layers.length) state.layers = d.layers;
+      if(d.layers?.length) state.layers = d.layers;
       if(d.activeLayer) state.activeLayer = d.activeLayer;
       if(typeof d.snap === 'boolean') state.snap = d.snap;
     }catch(e){}
@@ -408,62 +314,62 @@
   // === Toast / hint =========================================================
   let toastTm;
   function toast(msg, kind=''){
-    clearTimeout(toastTm);
-    toastEl.textContent = msg;
+    clearTimeout(toastTm); toastEl.textContent = msg;
     toastEl.className = 'toast show ' + kind;
     toastTm = setTimeout(()=>toastEl.className='toast '+kind,2200);
   }
   function showHint(msg){ hint.textContent=msg; hint.classList.add('show'); }
   function clearHint(){ hint.classList.remove('show'); }
 
-  // === PDF loading & rendering ==============================================
+  // === Canvas sizing ========================================================
+  function resizeCanvases(){
+    const r = wrap.getBoundingClientRect();
+    const w = Math.max(1, Math.floor(r.width));
+    const h = Math.max(1, Math.floor(r.height));
+    const dpr = state.dpr;
+    [pdfCv, drawCv].forEach(c=>{
+      c.style.width = w + 'px'; c.style.height = h + 'px';
+      const nw = Math.floor(w*dpr), nh = Math.floor(h*dpr);
+      if(c.width !== nw || c.height !== nh){ c.width = nw; c.height = nh; }
+    });
+  }
+
+  // === PDF ==================================================================
   async function loadPdfFromArrayBuffer(buf, name){
     spinner.classList.add('show');
     try{
-      state.pdfData = buf.slice(0); // keep copy
-      const loadingTask = pdfjsLib.getDocument({ data: buf });
-      state.pdf = await loadingTask.promise;
+      state.pdf = await pdfjsLib.getDocument({ data: buf }).promise;
       state.pdfName = name;
       state.pageCount = state.pdf.numPages;
       state.pageNum = 1;
       $('fileName').textContent = name;
       $('pageCtrl').style.display = state.pageCount>1 ? 'flex' : 'none';
       updatePageLabel();
-      // clear measurements when loading new file
-      state.measurements = [];
-      state.history = [];
-      await renderPage();
+      state.measurements = []; state.history = []; state.draft = null;
+      state.page = await state.pdf.getPage(state.pageNum);
+      state.pageBaseViewport = state.page.getViewport({ scale: 1 });
+      resizeCanvases();
       fitToScreen();
+      await rerenderOffscreen();
+      requestDraw();
       wrap.classList.remove('empty');
       saveSession();
-    }catch(e){
-      console.error(e);
-      toast('PDF konnte nicht geladen werden','err');
-    }finally{
-      spinner.classList.remove('show');
-    }
+    }catch(e){ console.error(e); toast('PDF konnte nicht geladen werden','err'); }
+    finally{ spinner.classList.remove('show'); }
   }
 
-  async function renderPage(){
+  async function changePage(delta){
     if(!state.pdf) return;
-    const page = await state.pdf.getPage(state.pageNum);
-    const baseVp = page.getViewport({ scale: 1 });
-    state.pageBaseViewport = baseVp;
-    // Render at render scale for crispness; we scale via CSS transform afterwards
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    state.renderScale = 2 * dpr;
-    const renderVp = page.getViewport({ scale: state.renderScale });
-    pdfCv.width = Math.ceil(renderVp.width);
-    pdfCv.height = Math.ceil(renderVp.height);
-    drawCv.width = pdfCv.width;
-    drawCv.height = pdfCv.height;
-    // CSS size = PDF points (will be scaled by transform)
-    pdfCv.style.width = baseVp.width + 'px';
-    pdfCv.style.height = baseVp.height + 'px';
-    drawCv.style.width = baseVp.width + 'px';
-    drawCv.style.height = baseVp.height + 'px';
-    await page.render({ canvasContext: pdfCtx, viewport: renderVp }).promise;
-    redraw();
+    const np = state.pageNum + delta;
+    if(np<1 || np>state.pageCount) return;
+    state.pageNum = np;
+    updatePageLabel();
+    state.page = await state.pdf.getPage(state.pageNum);
+    state.pageBaseViewport = state.page.getViewport({ scale: 1 });
+    fitToScreen();
+    await rerenderOffscreen();
+    requestDraw();
+    saveSession();
   }
 
   function updatePageLabel(){
@@ -472,300 +378,323 @@
     $('pageNext').disabled = state.pageNum >= state.pageCount;
   }
 
-  // === View transform =======================================================
-  function applyTransform(){
-    const t = `translate(${state.view.tx}px,${state.view.ty}px) scale(${state.view.zoom})`;
-    pdfCv.style.transform = t;
-    drawCv.style.transform = t;
+  // === Re-render offscreen ==================================================
+  async function rerenderOffscreen(){
+    if(!state.page || !state.pageBaseViewport) return;
+    if(state.renderInFlight){ state.pendingRender = true; return; }
+    qBadge.textContent = 'Render…';
+    qBadge.classList.add('show','rendering');
+
+    const r = wrap.getBoundingClientRect();
+    const dpr = state.dpr;
+    const pw = state.pageBaseViewport.width, ph = state.pageBaseViewport.height;
+
+    // Visible PDF rect with margin
+    const visTL = screenToPdf(0, 0);
+    const visBR = screenToPdf(r.width, r.height);
+    let minX = Math.min(visTL.x, visBR.x), maxX = Math.max(visTL.x, visBR.x);
+    let minY = Math.min(visTL.y, visBR.y), maxY = Math.max(visTL.y, visBR.y);
+    minX = Math.max(0, minX); minY = Math.max(0, minY);
+    maxX = Math.min(pw, maxX); maxY = Math.min(ph, maxY);
+    if(maxX <= minX || maxY <= minY){
+      state.off.ready = false; qBadge.classList.remove('show','rendering'); return;
+    }
+    const mx = (maxX-minX)*0.30, my = (maxY-minY)*0.30;
+    minX = Math.max(0, minX - mx); maxX = Math.min(pw, maxX + mx);
+    minY = Math.max(0, minY - my); maxY = Math.min(ph, maxY + my);
+
+    const renderZoom = state.view.zoom;
+    const wantW = (maxX - minX) * renderZoom * dpr;
+    const wantH = (maxY - minY) * renderZoom * dpr;
+    const MAX_PX = 12_000_000;
+    let scaleDown = 1;
+    if(wantW * wantH > MAX_PX){ scaleDown = Math.sqrt(MAX_PX / (wantW*wantH)); }
+    const cnvW = Math.max(1, Math.floor(wantW * scaleDown));
+    const cnvH = Math.max(1, Math.floor(wantH * scaleDown));
+
+    offscreen.width = cnvW; offscreen.height = cnvH;
+    const effZoom = renderZoom * scaleDown * dpr;
+    const vp = state.page.getViewport({
+      scale: effZoom,
+      offsetX: -minX * effZoom,
+      offsetY: -minY * effZoom
+    });
+
+    offCtx.fillStyle = '#ffffff';
+    offCtx.fillRect(0, 0, cnvW, cnvH);
+
+    const task = state.page.render({ canvasContext: offCtx, viewport: vp });
+    state.renderInFlight = task.promise;
+    try{
+      await state.renderInFlight;
+      state.off.zoom = renderZoom;
+      state.off.originX = minX;
+      state.off.originY = minY;
+      state.off.scaleDown = scaleDown;
+      state.off.ready = true;
+    }catch(e){ /* aborted */ }
+    state.renderInFlight = null;
+    qBadge.classList.remove('rendering');
+    if(state.off.scaleDown < 0.99){ qBadge.textContent = 'Reduziert ('+(state.off.scaleDown*100|0)+'%)'; qBadge.classList.add('show'); }
+    else qBadge.classList.remove('show');
+    if(state.pendingRender){ state.pendingRender = false; rerenderOffscreen(); }
+    requestDraw();
   }
+
+  function scheduleRerender(){
+    clearTimeout(state.rerenderTimer);
+    state.rerenderTimer = setTimeout(()=>rerenderOffscreen(), 220);
+  }
+
+  // === View / coords ========================================================
   function fitToScreen(){
     if(!state.pageBaseViewport) return;
-    const w = wrap.clientWidth, h = wrap.clientHeight;
+    const r = wrap.getBoundingClientRect();
     const pw = state.pageBaseViewport.width, ph = state.pageBaseViewport.height;
-    const z = Math.min(w/pw, h/ph) * 0.95;
+    const z = Math.min(r.width/pw, r.height/ph) * 0.95;
     state.view.zoom = z;
-    state.view.tx = (w - pw*z)/2;
-    state.view.ty = (h - ph*z)/2;
-    applyTransform();
+    state.view.tx = (r.width - pw*z)/2;
+    state.view.ty = (r.height - ph*z)/2;
+    scheduleRerender();
+    requestDraw();
     updateStatus();
   }
-
-  // === Coordinate conversion ================================================
-  // screen px -> PDF points
   function screenToPdf(sx, sy){
-    const r = wrap.getBoundingClientRect();
-    const x = (sx - r.left - state.view.tx) / state.view.zoom;
-    const y = (sy - r.top  - state.view.ty) / state.view.zoom;
-    return { x, y };
+    return { x: (sx - state.view.tx)/state.view.zoom, y: (sy - state.view.ty)/state.view.zoom };
   }
-  // PDF points -> screen px (relative to wrap)
-  function pdfToScreen(px, py){
-    return {
-      x: px*state.view.zoom + state.view.tx,
-      y: py*state.view.zoom + state.view.ty
-    };
+  function pdfToVp(p){ return { x: p.x*state.view.zoom + state.view.tx, y: p.y*state.view.zoom + state.view.ty }; }
+
+  // === Draw =================================================================
+  function requestDraw(){
+    if(state.drawScheduled) return;
+    state.drawScheduled = true;
+    requestAnimationFrame(frameTick);
+  }
+  function frameTick(){
+    state.drawScheduled = false;
+    // process buffered move first if any
+    if(state.pendingMove){
+      const mv = state.pendingMove; state.pendingMove = null;
+      processMove(mv);
+    }
+    draw();
   }
 
-  // === Measurement math =====================================================
-  // Real distance in meters between two PDF points
-  function realDistance(p1, p2){
-    const dx = p2.x - p1.x, dy = p2.y - p1.y;
-    const pdfPoints = Math.hypot(dx, dy);
+  function draw(){
+    const dpr = state.dpr;
+    pdfCtx.setTransform(1,0,0,1,0,0);
+    pdfCtx.clearRect(0,0,pdfCv.width, pdfCv.height);
+
+    if(state.off.ready){
+      const offWPdf = offscreen.width / (state.off.zoom * state.off.scaleDown * dpr);
+      const offHPdf = offscreen.height / (state.off.zoom * state.off.scaleDown * dpr);
+      const dx = (state.off.originX * state.view.zoom + state.view.tx) * dpr;
+      const dy = (state.off.originY * state.view.zoom + state.view.ty) * dpr;
+      const dw = offWPdf * state.view.zoom * dpr;
+      const dh = offHPdf * state.view.zoom * dpr;
+      if(dx + dw > 0 && dy + dh > 0 && dx < pdfCv.width && dy < pdfCv.height){
+        pdfCtx.imageSmoothingEnabled = (state.view.zoom <= state.off.zoom * 1.2);
+        pdfCtx.imageSmoothingQuality = 'low';
+        pdfCtx.drawImage(offscreen, 0, 0, offscreen.width, offscreen.height, dx, dy, dw, dh);
+      }
+    }
+
+    drawCtx.setTransform(dpr,0,0,dpr,0,0);
+    drawCtx.clearRect(0,0,drawCv.width/dpr, drawCv.height/dpr);
+
+    for(const m of state.measurements){
+      const layer = state.layers.find(l=>l.id===m.layerId);
+      if(!layer || !layer.visible) continue;
+      drawMeasurement(m, layer.color);
+    }
+    if(state.draft){
+      const layer = state.layers.find(l=>l.id===state.activeLayer);
+      drawMeasurement(state.draft, (layer?.color)||'#ff6a00', true);
+    }
+    if(state.calLine){
+      drawMeasurement({type:'line',points:state.calLine}, '#58a6ff', true);
+    }
+  }
+
+  function drawMeasurement(m, color, isDraft){
+    const ctx = drawCtx;
+    ctx.strokeStyle = color; ctx.fillStyle = color;
+    ctx.lineWidth = 1.6; ctx.lineCap='round'; ctx.lineJoin='round';
+    ctx.setLineDash(isDraft ? [6,4] : []);
+    const pts = m.points; if(!pts.length) return;
+    const vp = pts.map(pdfToVp);
+
+    ctx.beginPath();
+    ctx.moveTo(vp[0].x, vp[0].y);
+    for(let i=1;i<vp.length;i++) ctx.lineTo(vp[i].x, vp[i].y);
+    if(m.type==='poly' && (m.closed || (vp.length>=3 && !isDraft))){
+      ctx.closePath();
+      const fs = ctx.fillStyle;
+      ctx.fillStyle = hexToRgba(color, 0.15); ctx.fill();
+      ctx.fillStyle = fs;
+    }
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    for(const p of vp){
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 5.5, 0, Math.PI*2);
+      ctx.fillStyle = '#0e1116'; ctx.fill();
+      ctx.strokeStyle = color; ctx.lineWidth = 1.8; ctx.stroke();
+    }
+    ctx.fillStyle = color;
+
+    if(m.type==='line' && pts.length===2){
+      const mx = (vp[0].x+vp[1].x)/2, my=(vp[0].y+vp[1].y)/2;
+      drawLabel(formatLength(realDistance(pts[0], pts[1])), mx, my, color);
+    } else if(m.type==='poly' && pts.length>=2){
+      const segs = pts.length - 1 + (m.closed?1:0);
+      for(let i=0;i<segs;i++){
+        const a = vp[i], b = vp[(i+1)%vp.length];
+        drawLabel(formatLength(realDistance(pts[i], pts[(i+1)%pts.length])), (a.x+b.x)/2, (a.y+b.y)/2, color, true);
+      }
+      if(m.closed && pts.length>=3){
+        let cx=0,cy=0; for(const p of vp){cx+=p.x;cy+=p.y;} cx/=vp.length; cy/=vp.length;
+        drawLabel(formatArea(polygonArea(pts)), cx, cy, color);
+        drawLabel('U='+formatLength(polygonPerimeter(pts)), cx, cy+18, color, true);
+      }
+    } else if(m.type==='angle' && pts.length===3){
+      drawAngleArc(vp[0],vp[1],vp[2],color);
+      drawLabel(angleDeg(pts[0],pts[1],pts[2]).toFixed(1)+'°', vp[1].x, vp[1].y-22, color);
+    }
+  }
+  function drawAngleArc(a,b,c,color){
+    const ctx = drawCtx;
+    let a1 = Math.atan2(a.y-b.y, a.x-b.x), a2 = Math.atan2(c.y-b.y, c.x-b.x);
+    let diff = a2-a1; while(diff>Math.PI) diff-=Math.PI*2; while(diff<-Math.PI) diff+=Math.PI*2;
+    ctx.beginPath();
+    if(diff>=0) ctx.arc(b.x,b.y,28,a1,a1+diff); else ctx.arc(b.x,b.y,28,a1+diff,a1);
+    ctx.strokeStyle = color; ctx.lineWidth=1.6; ctx.stroke();
+  }
+  function drawLabel(text,x,y,color,small){
+    const ctx = drawCtx;
+    ctx.font = (small?'600 10px ':'600 12px ')+'ui-monospace,monospace';
+    const w = ctx.measureText(text).width;
+    const h = small?12:14;
+    const padX=4, padY=2;
+    ctx.fillStyle = 'rgba(14,17,22,0.85)';
+    ctx.fillRect(x-w/2-padX, y-h/2-padY, w+padX*2, h+padY*2);
+    ctx.strokeStyle = color; ctx.lineWidth=1;
+    ctx.strokeRect(x-w/2-padX, y-h/2-padY, w+padX*2, h+padY*2);
+    ctx.fillStyle = color; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText(text, x, y);
+  }
+  function hexToRgba(hex,a){
+    const v=hex.replace('#','');
+    return `rgba(${parseInt(v.substring(0,2),16)},${parseInt(v.substring(2,4),16)},${parseInt(v.substring(4,6),16)},${a})`;
+  }
+
+  // === Math =================================================================
+  function realDistance(p1,p2){
     if(!state.scaleNum) return null;
-    // 1 PDF point = 1/dpi inches = 2.54/dpi cm in print
-    // print cm * scaleNum = real cm
-    const realCm = pdfPoints * (2.54 / state.scaleDpi) * state.scaleNum;
-    return realCm / 100; // meters
+    return Math.hypot(p2.x-p1.x, p2.y-p1.y) * (2.54/state.scaleDpi) * state.scaleNum / 100;
   }
   function formatLength(m){
-    if(m == null) return '— (kein Maßstab)';
-    if(m < 1) return (m*100).toFixed(1) + ' cm';
-    if(m < 10) return m.toFixed(3) + ' m';
-    return m.toFixed(2) + ' m';
+    if(m==null) return '— (kein Maßstab)';
+    if(m<1) return (m*100).toFixed(1)+' cm';
+    if(m<10) return m.toFixed(3)+' m';
+    return m.toFixed(2)+' m';
   }
   function formatArea(m2){
-    if(m2 == null) return '— (kein Maßstab)';
-    if(m2 < 1) return (m2*10000).toFixed(0) + ' cm²';
-    return m2.toFixed(2) + ' m²';
+    if(m2==null) return '— (kein Maßstab)';
+    if(m2<1) return (m2*10000).toFixed(0)+' cm²';
+    return m2.toFixed(2)+' m²';
   }
   function polygonArea(pts){
-    // shoelace, in PDF points² → meters²
-    if(pts.length < 3) return 0;
-    let a = 0;
-    for(let i=0;i<pts.length;i++){
-      const p1 = pts[i], p2 = pts[(i+1)%pts.length];
-      a += p1.x*p2.y - p2.x*p1.y;
-    }
-    const pdfPts2 = Math.abs(a)/2;
+    if(pts.length<3) return 0;
     if(!state.scaleNum) return null;
-    const cmPerPt = (2.54/state.scaleDpi) * state.scaleNum;
-    const cm2 = pdfPts2 * cmPerPt * cmPerPt;
-    return cm2/10000;
+    let a=0;
+    for(let i=0;i<pts.length;i++){ const p1=pts[i], p2=pts[(i+1)%pts.length]; a+=p1.x*p2.y-p2.x*p1.y; }
+    const cmPerPt=(2.54/state.scaleDpi)*state.scaleNum;
+    return Math.abs(a)/2 * cmPerPt*cmPerPt / 10000;
   }
   function polygonPerimeter(pts){
-    let total = 0;
-    for(let i=0;i<pts.length;i++){
-      const p1 = pts[i], p2 = pts[(i+1)%pts.length];
-      total += Math.hypot(p2.x-p1.x, p2.y-p1.y);
-    }
     if(!state.scaleNum) return null;
-    return total * (2.54/state.scaleDpi) * state.scaleNum / 100;
+    let t=0; for(let i=0;i<pts.length;i++){ const p1=pts[i], p2=pts[(i+1)%pts.length]; t+=Math.hypot(p2.x-p1.x, p2.y-p1.y); }
+    return t * (2.54/state.scaleDpi) * state.scaleNum / 100;
   }
-  function angleDeg(a, b, c){
-    // angle at b
-    const v1 = { x: a.x-b.x, y: a.y-b.y };
-    const v2 = { x: c.x-b.x, y: c.y-b.y };
-    const dot = v1.x*v2.x + v1.y*v2.y;
-    const m = Math.hypot(v1.x,v1.y) * Math.hypot(v2.x,v2.y);
+  function angleDeg(a,b,c){
+    const v1={x:a.x-b.x,y:a.y-b.y}, v2={x:c.x-b.x,y:c.y-b.y};
+    const m=Math.hypot(v1.x,v1.y)*Math.hypot(v2.x,v2.y);
     if(!m) return 0;
-    const cos = Math.max(-1, Math.min(1, dot/m));
-    return Math.acos(cos) * 180/Math.PI;
+    return Math.acos(Math.max(-1,Math.min(1,(v1.x*v2.x+v1.y*v2.y)/m)))*180/Math.PI;
   }
 
-  // === Snapping =============================================================
+  // === Snap =================================================================
   function getSnapTarget(pdfPt){
     if(!state.snap) return null;
     const tol = state.snapDist / state.view.zoom;
-    let best = null, bestD = tol;
-    // existing measurement points
+    let best=null, bestD=tol;
     for(const m of state.measurements){
       const layer = state.layers.find(l=>l.id===m.layerId);
       if(!layer || !layer.visible) continue;
       for(const p of m.points){
         const d = Math.hypot(p.x-pdfPt.x, p.y-pdfPt.y);
-        if(d < bestD){ bestD = d; best = { ...p, kind:'endpoint' }; }
+        if(d<bestD){ bestD=d; best={x:p.x,y:p.y}; }
       }
-      // segment intersections with self? skip — too noisy
     }
-    // intersections between measurement segments (not common for endpoints)
     return best;
   }
-
-  // === Drawing overlay ======================================================
-  function redraw(){
-    if(!drawCtx) return;
-    const s = state.renderScale;
-    drawCtx.setTransform(s, 0, 0, s, 0, 0);
-    drawCtx.clearRect(0,0,drawCv.width/s, drawCv.height/s);
-    // each PDF point unit; line widths scale inversely with zoom for consistency
-    const lwBase = 1.5 / state.view.zoom;
-    const lwHandle = 5 / state.view.zoom;
-    const fontPx = Math.max(10, 13 / state.view.zoom);
-
-    for(const m of state.measurements){
-      const layer = state.layers.find(l=>l.id===m.layerId);
-      if(!layer || !layer.visible) continue;
-      drawMeasurement(m, layer.color, lwBase, lwHandle, fontPx);
-    }
-    // draft
-    if(state.draft){
-      const layer = state.layers.find(l=>l.id===state.activeLayer);
-      const col = layer ? layer.color : '#ff6a00';
-      drawMeasurement(state.draft, col, lwBase, lwHandle, fontPx, true);
-    }
-    if(state.calLine){
-      drawMeasurement({type:'line',points:state.calLine}, '#58a6ff', lwBase, lwHandle, fontPx, true);
-    }
-  }
-
-  function drawMeasurement(m, color, lw, lwH, fontPx, isDraft){
-    const ctx = drawCtx;
-    ctx.strokeStyle = color;
-    ctx.fillStyle = color;
-    ctx.lineWidth = lw;
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-    if(isDraft){ ctx.setLineDash([6/state.view.zoom, 4/state.view.zoom]); }
-    else ctx.setLineDash([]);
-
-    const pts = m.points;
-    if(pts.length === 0) return;
-
-    // shape
-    ctx.beginPath();
-    ctx.moveTo(pts[0].x, pts[0].y);
-    for(let i=1;i<pts.length;i++) ctx.lineTo(pts[i].x, pts[i].y);
-    if(m.type === 'poly' && (m.closed || pts.length>=3 && !isDraft)){
-      ctx.closePath();
-      // fill translucent
-      const prev = ctx.fillStyle;
-      ctx.fillStyle = hexToRgba(color, 0.15);
-      ctx.fill();
-      ctx.fillStyle = prev;
-    }
-    ctx.stroke();
-    ctx.setLineDash([]);
-
-    // handles
-    for(const p of pts){
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, lwH, 0, Math.PI*2);
-      ctx.fillStyle = '#0e1116';
-      ctx.fill();
-      ctx.strokeStyle = color;
-      ctx.lineWidth = lw*1.2;
-      ctx.stroke();
-    }
-    ctx.fillStyle = color;
-
-    // labels
-    ctx.font = `600 ${fontPx}px var(--mono),monospace`;
-    ctx.textBaseline = 'middle';
-
-    if(m.type === 'line' && pts.length === 2){
-      const mx = (pts[0].x+pts[1].x)/2, my = (pts[0].y+pts[1].y)/2;
-      const dist = realDistance(pts[0], pts[1]);
-      drawLabel(formatLength(dist), mx, my, color);
-    } else if(m.type === 'poly' && pts.length >= 2){
-      // segment lengths
-      for(let i=0;i<pts.length-1+(m.closed?1:0);i++){
-        const a = pts[i], b = pts[(i+1)%pts.length];
-        const mx = (a.x+b.x)/2, my = (a.y+b.y)/2;
-        const dist = realDistance(a, b);
-        drawLabel(formatLength(dist), mx, my, color, true);
-      }
-      if(m.closed && pts.length>=3){
-        // centroid
-        let cx=0,cy=0;
-        for(const p of pts){ cx+=p.x; cy+=p.y; }
-        cx/=pts.length; cy/=pts.length;
-        const a = polygonArea(pts);
-        const peri = polygonPerimeter(pts);
-        drawLabel(formatArea(a), cx, cy, color);
-        drawLabel('U=' + formatLength(peri), cx, cy + fontPx*1.4, color, true);
-      }
-    } else if(m.type === 'angle' && pts.length === 3){
-      const ang = angleDeg(pts[0], pts[1], pts[2]);
-      drawAngleArc(pts[0], pts[1], pts[2], color, lw);
-      drawLabel(ang.toFixed(1) + '°', pts[1].x, pts[1].y - 20/state.view.zoom, color);
-    }
-  }
-
-  function drawAngleArc(a,b,c,color,lw){
-    const ctx = drawCtx;
-    const r = 30/state.view.zoom;
-    let a1 = Math.atan2(a.y-b.y, a.x-b.x);
-    let a2 = Math.atan2(c.y-b.y, c.x-b.x);
-    // pick smaller arc
-    let diff = a2 - a1;
-    while(diff > Math.PI) diff -= Math.PI*2;
-    while(diff < -Math.PI) diff += Math.PI*2;
-    ctx.beginPath();
-    if(diff >= 0) ctx.arc(b.x, b.y, r, a1, a1+diff);
-    else ctx.arc(b.x, b.y, r, a1+diff, a1);
-    ctx.strokeStyle = color;
-    ctx.lineWidth = lw;
-    ctx.stroke();
-  }
-
-  function drawLabel(text, x, y, color, small){
-    const ctx = drawCtx;
-    const padX = 4/state.view.zoom, padY = 2/state.view.zoom;
-    const fontPx = (small ? 10 : 12)/state.view.zoom;
-    ctx.font = `600 ${Math.max(9, fontPx*state.view.zoom)/state.view.zoom}px ui-monospace,monospace`;
-    const w = ctx.measureText(text).width;
-    const h = fontPx*1.2;
-    ctx.fillStyle = 'rgba(14,17,22,0.85)';
-    ctx.fillRect(x - w/2 - padX, y - h/2 - padY, w + padX*2, h + padY*2);
-    ctx.strokeStyle = color;
-    ctx.lineWidth = 0.8/state.view.zoom;
-    ctx.strokeRect(x - w/2 - padX, y - h/2 - padY, w + padX*2, h + padY*2);
-    ctx.fillStyle = color;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(text, x, y);
-  }
-
-  function hexToRgba(hex, a){
-    const v = hex.replace('#','');
-    const r = parseInt(v.substring(0,2),16);
-    const g = parseInt(v.substring(2,4),16);
-    const b = parseInt(v.substring(4,6),16);
-    return `rgba(${r},${g},${b},${a})`;
-  }
+  function snapOrPdf(pt){ const s=getSnapTarget(pt); return s?{x:s.x,y:s.y}:pt; }
 
   // === Loupe ================================================================
   function showLoupe(sx, sy, snapPt){
-    loupe.style.display = 'block';
-    // position loupe near pointer but offset so finger doesn't cover it
+    if(!state.off.ready) return;
+    loupe.style.display='block';
+    let lx = sx - 90;
+    let ly = sy - 200;
     const r = wrap.getBoundingClientRect();
-    let lx = sx - r.left - 90;
-    let ly = sy - r.top - 200;
-    if(ly < 10) ly = sy - r.top + 30;
+    if(ly < 10) ly = sy + 30;
     if(lx < 10) lx = 10;
-    if(lx > r.width - 190) lx = r.width - 190;
-    loupe.style.left = lx + 'px';
-    loupe.style.top = ly + 'px';
-    // render zoomed PDF + overlay around point
-    const zoom = 3;
-    const size = 180;
+    if(lx > r.width-190) lx = r.width-190;
+    loupe.style.left = lx+'px'; loupe.style.top = ly+'px';
+
+    const lzoom = 3, size = 180;
     loupeCv.width = size; loupeCv.height = size;
-    loupeCtx.fillStyle = '#0a0d11';
-    loupeCtx.fillRect(0,0,size,size);
-    // source point in PDF
+    loupeCtx.fillStyle='#0a0d11'; loupeCtx.fillRect(0,0,size,size);
+
     const pt = snapPt || screenToPdf(sx, sy);
-    // Source rect on PDF canvas (pdfCv is in render-scale pixels)
-    const srcSize = size / zoom / state.view.zoom * state.renderScale;
-    const sxp = pt.x*state.renderScale - srcSize/2;
-    const syp = pt.y*state.renderScale - srcSize/2;
-    loupeCtx.imageSmoothingEnabled = false;
-    loupeCtx.drawImage(pdfCv, sxp, syp, srcSize, srcSize, 0, 0, size, size);
-    // overlay measurements
-    loupeCtx.drawImage(drawCv, sxp, syp, srcSize, srcSize, 0, 0, size, size);
-    // snap indicator
-    if(snapPt){
-      loupeCtx.strokeStyle = '#3fb950';
-      loupeCtx.lineWidth = 2;
+    const effZoom = state.off.zoom * state.off.scaleDown * state.dpr;
+    const ox = (pt.x - state.off.originX) * effZoom;
+    const oy = (pt.y - state.off.originY) * effZoom;
+    const srcSize = size * effZoom / (state.view.zoom * lzoom * state.dpr);
+    loupeCtx.imageSmoothingEnabled=false;
+    loupeCtx.drawImage(offscreen, ox-srcSize/2, oy-srcSize/2, srcSize, srcSize, 0, 0, size, size);
+
+    const pdf2c = (p) => ({ x: size/2 + (p.x-pt.x)*state.view.zoom*lzoom, y: size/2 + (p.y-pt.y)*state.view.zoom*lzoom });
+    loupeCtx.lineWidth = 1.2;
+    for(const m of state.measurements){
+      const layer = state.layers.find(l=>l.id===m.layerId);
+      if(!layer || !layer.visible) continue;
+      loupeCtx.strokeStyle = layer.color;
       loupeCtx.beginPath();
-      loupeCtx.arc(size/2, size/2, 14, 0, Math.PI*2);
+      m.points.forEach((p,i)=>{
+        const v = pdf2c(p);
+        if(i===0) loupeCtx.moveTo(v.x, v.y); else loupeCtx.lineTo(v.x, v.y);
+      });
+      if(m.type==='poly' && m.closed) loupeCtx.closePath();
       loupeCtx.stroke();
+      for(const p of m.points){
+        const v = pdf2c(p);
+        loupeCtx.beginPath(); loupeCtx.arc(v.x, v.y, 3, 0, Math.PI*2);
+        loupeCtx.fillStyle='#0e1116'; loupeCtx.fill(); loupeCtx.stroke();
+      }
+    }
+    if(snapPt){
+      loupeCtx.strokeStyle='#3fb950'; loupeCtx.lineWidth=2;
+      loupeCtx.beginPath(); loupeCtx.arc(size/2, size/2, 14, 0, Math.PI*2); loupeCtx.stroke();
     }
   }
-  function hideLoupe(){ loupe.style.display = 'none'; }
+  function hideLoupe(){ loupe.style.display='none'; }
 
   // === Status ===============================================================
   function updateStatus(){
-    let s = '';
+    let s='';
     if(state.scaleNum) s += `<b>1:${state.scaleNum}</b> @ ${state.scaleDpi} DPI · `;
     else s += `<span style="color:var(--err)">Maßstab fehlt</span> · `;
     s += `Zoom <b>${(state.view.zoom*100).toFixed(0)}%</b> · `;
@@ -773,58 +702,58 @@
     if(state.snap) s += ' · SNAP';
     status.innerHTML = s;
   }
-  function labelForTool(t){
-    return {pan:'Hand',line:'Linie',poly:'Fläche',angle:'Winkel',edit:'Bearbeiten'}[t]||t;
-  }
+  function labelForTool(t){return {pan:'Hand',line:'Linie',poly:'Fläche',angle:'Winkel',edit:'Bearbeiten'}[t]||t;}
 
-  // === Pointer / interaction ================================================
-  // Pinch zoom + pan via two pointers; drawing via single pointer
-  function pointerDown(e){
+  // === Pointer interaction ==================================================
+  function onPointerDown(e){
     if(!state.pdf) return;
     e.preventDefault();
-    wrap.setPointerCapture(e.pointerId);
-    state.pointers.set(e.pointerId, { x: e.clientX, y: e.clientY, type: e.pointerType });
+    try{ wrap.setPointerCapture(e.pointerId); }catch(_){}
+    const r = wrap.getBoundingClientRect();
+    const sx = e.clientX - r.left, sy = e.clientY - r.top;
+    state.pointers.set(e.pointerId, { x: sx, y: sy });
 
     if(state.pointers.size === 2){
-      // start pinch
       const [a,b] = [...state.pointers.values()];
-      state.pinchStart = {
-        d: Math.hypot(b.x-a.x, b.y-a.y),
-        cx: (a.x+b.x)/2, cy:(a.y+b.y)/2,
-        zoom: state.view.zoom, tx: state.view.tx, ty: state.view.ty
+      const cx = (a.x+b.x)/2, cy=(a.y+b.y)/2;
+      state.pinch = {
+        startDist: Math.hypot(b.x-a.x, b.y-a.y),
+        startZoom: state.view.zoom,
+        anchorPdf: screenToPdf(cx, cy)
       };
-      state.draft = null; // cancel any in-progress draft on pinch
-      state.drag = null;
+      state.draft = null; state.drag = null; state.panStart = null;
       hideLoupe();
-      redraw();
+      requestDraw();
       return;
     }
 
     if(state.pointers.size === 1){
-      handleSingleDown(e.clientX, e.clientY, e.pointerType);
+      const now = Date.now();
+      if(state.tool==='pan' && now - state.lastTap < 300){
+        fitToScreen();
+        state.lastTap = 0;
+        return;
+      }
+      state.lastTap = now;
+      handleSingleDown(sx, sy);
     }
   }
 
-  function handleSingleDown(sx, sy, ptype){
+  function handleSingleDown(sx, sy){
     const pdfPt = screenToPdf(sx, sy);
 
     if(state.calibrating){
-      // start cal line
-      state.calLine = [snapOrPdf(pdfPt), snapOrPdf(pdfPt)];
-      showLoupe(sx, sy, getSnapTarget(pdfPt));
-      redraw();
-      return;
+      const sp = snapOrPdf(pdfPt);
+      state.calLine = [sp, sp];
+      requestDraw(); return;
     }
-
-    if(state.tool === 'pan'){
+    if(state.tool==='pan'){
       state.panStart = { x: sx, y: sy, tx: state.view.tx, ty: state.view.ty };
       return;
     }
-
-    if(state.tool === 'edit'){
-      // hit-test handle
-      const tol = 14/state.view.zoom;
-      for(let mi = state.measurements.length-1; mi>=0; mi--){
+    if(state.tool==='edit'){
+      const tol = 18/state.view.zoom;
+      for(let mi=state.measurements.length-1; mi>=0; mi--){
         const m = state.measurements[mi];
         const layer = state.layers.find(l=>l.id===m.layerId);
         if(!layer || !layer.visible) continue;
@@ -832,253 +761,171 @@
           const p = m.points[pi];
           if(Math.hypot(p.x-pdfPt.x, p.y-pdfPt.y) < tol){
             state.drag = { measId: m.id, pointIdx: pi };
-            showLoupe(sx, sy, p);
             return;
           }
         }
       }
       return;
     }
-
-    // line/poly/angle: place a point on UP — but we draft on move
-    if(state.tool === 'line'){
+    if(state.tool==='line'){
       if(!state.draft){
         const sp = snapOrPdf(pdfPt);
         state.draft = { id: nid(), type:'line', layerId: state.activeLayer, points:[sp, sp] };
-      } else {
-        // finalize on second tap
-        finalizeDraft();
-      }
-      showLoupe(sx, sy, getSnapTarget(pdfPt));
-      redraw();
-      return;
+      } else { finalizeDraft(); }
+      requestDraw(); return;
     }
-    if(state.tool === 'angle'){
+    if(state.tool==='angle'){
+      const sp = snapOrPdf(pdfPt);
       if(!state.draft){
-        const sp = snapOrPdf(pdfPt);
         state.draft = { id: nid(), type:'angle', layerId: state.activeLayer, points:[sp] };
-      } else if(state.draft.points.length === 1){
-        const sp = snapOrPdf(pdfPt);
-        state.draft.points.push(sp);
-      } else if(state.draft.points.length === 2){
-        const sp = snapOrPdf(pdfPt);
-        state.draft.points.push(sp);
-        finalizeDraft();
-      }
-      showLoupe(sx, sy, getSnapTarget(pdfPt));
-      redraw();
-      return;
+      } else if(state.draft.points.length===1){ state.draft.points.push(sp); }
+      else if(state.draft.points.length===2){ state.draft.points.push(sp); finalizeDraft(); }
+      requestDraw(); return;
     }
-    if(state.tool === 'poly'){
+    if(state.tool==='poly'){
+      const sp = snapOrPdf(pdfPt);
       if(!state.draft){
-        const sp = snapOrPdf(pdfPt);
         state.draft = { id: nid(), type:'poly', layerId: state.activeLayer, points:[sp], closed:false };
       } else {
-        // check if tapped near first point → close
         const first = state.draft.points[0];
-        if(state.draft.points.length >= 3 && Math.hypot(first.x-pdfPt.x, first.y-pdfPt.y) < 14/state.view.zoom){
-          state.draft.closed = true;
-          finalizeDraft();
-        } else {
-          const sp = snapOrPdf(pdfPt);
-          state.draft.points.push(sp);
-        }
+        if(state.draft.points.length>=3 && Math.hypot(first.x-pdfPt.x, first.y-pdfPt.y) < 18/state.view.zoom){
+          state.draft.closed = true; finalizeDraft();
+        } else { state.draft.points.push(sp); }
       }
-      showLoupe(sx, sy, getSnapTarget(pdfPt));
-      redraw();
-      return;
+      requestDraw(); return;
     }
   }
 
-  function snapOrPdf(pdfPt){
-    const s = getSnapTarget(pdfPt);
-    return s ? { x:s.x, y:s.y } : pdfPt;
+  function onPointerMove(e){
+    if(!state.pdf || !state.pointers.has(e.pointerId)) return;
+    const r = wrap.getBoundingClientRect();
+    const sx = e.clientX - r.left, sy = e.clientY - r.top;
+    state.pointers.set(e.pointerId, { x: sx, y: sy });
+    state.pendingMove = { sx, sy, pid: e.pointerId };
+    requestDraw();
   }
 
-  function pointerMove(e){
-    if(!state.pdf) return;
-    if(!state.pointers.has(e.pointerId)) return;
-    state.pointers.set(e.pointerId, { x:e.clientX, y:e.clientY, type:e.pointerType });
+  function processMove(mv){
+    const { sx, sy } = mv;
 
-    if(state.pointers.size === 2 && state.pinchStart){
+    if(state.pointers.size===2 && state.pinch){
       const [a,b] = [...state.pointers.values()];
-      const d = Math.hypot(b.x-a.x, b.y-a.y);
-      const cx = (a.x+b.x)/2, cy=(a.y+b.y)/2;
-      const ratio = d / state.pinchStart.d;
-      const newZoom = Math.max(0.05, Math.min(40, state.pinchStart.zoom * ratio));
-      // zoom around pinch center
-      const r = wrap.getBoundingClientRect();
-      const px = state.pinchStart.cx - r.left;
-      const py = state.pinchStart.cy - r.top;
-      const dx = cx - state.pinchStart.cx;
-      const dy = cy - state.pinchStart.cy;
-      // anchor: keep PDF point under pinch start centered
-      const pdfX = (px - state.pinchStart.tx) / state.pinchStart.zoom;
-      const pdfY = (py - state.pinchStart.ty) / state.pinchStart.zoom;
+      const dist = Math.hypot(b.x-a.x, b.y-a.y);
+      const cx = (a.x+b.x)/2, cy = (a.y+b.y)/2;
+      let newZoom = Math.max(0.05, Math.min(40, state.pinch.startZoom * (dist/state.pinch.startDist)));
       state.view.zoom = newZoom;
-      state.view.tx = px - pdfX*newZoom + dx;
-      state.view.ty = py - pdfY*newZoom + dy;
-      applyTransform();
-      redraw();
+      state.view.tx = cx - state.pinch.anchorPdf.x * newZoom;
+      state.view.ty = cy - state.pinch.anchorPdf.y * newZoom;
       updateStatus();
+      scheduleRerender();
       return;
     }
 
-    if(state.pointers.size === 1){
-      const pdfPt = screenToPdf(e.clientX, e.clientY);
+    if(state.pointers.size===1){
+      const pdfPt = screenToPdf(sx, sy);
 
       if(state.calibrating && state.calLine){
         state.calLine[1] = snapOrPdf(pdfPt);
-        showLoupe(e.clientX, e.clientY, getSnapTarget(pdfPt));
-        redraw();
+        showLoupe(sx, sy, getSnapTarget(pdfPt));
         return;
       }
-
-      if(state.tool === 'pan' && state.panStart){
-        state.view.tx = state.panStart.tx + (e.clientX - state.panStart.x);
-        state.view.ty = state.panStart.ty + (e.clientY - state.panStart.y);
-        applyTransform();
+      if(state.tool==='pan' && state.panStart){
+        state.view.tx = state.panStart.tx + (sx - state.panStart.x);
+        state.view.ty = state.panStart.ty + (sy - state.panStart.y);
+        scheduleRerender();
         return;
       }
-
       if(state.drag){
-        const m = state.measurements.find(x=>x.id === state.drag.measId);
+        const m = state.measurements.find(x=>x.id===state.drag.measId);
         if(m){
-          const sp = snapOrPdf(pdfPt);
-          m.points[state.drag.pointIdx] = sp;
-          showLoupe(e.clientX, e.clientY, getSnapTarget(pdfPt));
-          redraw();
+          m.points[state.drag.pointIdx] = snapOrPdf(pdfPt);
+          showLoupe(sx, sy, getSnapTarget(pdfPt));
           updateStatus();
         }
         return;
       }
-
       if(state.draft){
-        // update last point of draft as we drag for line; for poly/angle, hover preview last point
-        if(state.draft.type === 'line'){
-          state.draft.points[1] = snapOrPdf(pdfPt);
-        } else {
-          // ghost preview point: tentatively replace last while dragging
-          // we'll restore on up
-        }
-        showLoupe(e.clientX, e.clientY, getSnapTarget(pdfPt));
-        redraw();
+        if(state.draft.type==='line'){ state.draft.points[1] = snapOrPdf(pdfPt); }
+        showLoupe(sx, sy, getSnapTarget(pdfPt));
         return;
       }
     }
   }
 
-  function pointerUp(e){
+  function onPointerUp(e){
     state.pointers.delete(e.pointerId);
-    if(state.pointers.size < 2) state.pinchStart = null;
+    if(state.pointers.size < 2) state.pinch = null;
     if(state.pointers.size === 0){
       hideLoupe();
-      // finalize line drag
-      if(state.tool === 'line' && state.draft && state.draft.type === 'line'){
+      if(state.tool==='line' && state.draft && state.draft.type==='line'){
         const a = state.draft.points[0], b = state.draft.points[1];
-        if(Math.hypot(a.x-b.x, a.y-b.y) > 4/state.view.zoom){
-          finalizeDraft();
-        }
-        // else: stay in two-tap mode
+        if(Math.hypot(a.x-b.x, a.y-b.y) > 4/state.view.zoom){ finalizeDraft(); }
       }
       if(state.calibrating && state.calLine){
         const a = state.calLine[0], b = state.calLine[1];
-        if(Math.hypot(a.x-b.x, a.y-b.y) > 4/state.view.zoom){
-          openCalStep();
-        }
+        if(Math.hypot(a.x-b.x, a.y-b.y) > 4/state.view.zoom){ openCalStep(); }
       }
-      if(state.drag){ pushHistory(); state.drag = null; saveSession(); }
+      if(state.drag){ pushHistory(); state.drag=null; saveSession(); }
       state.panStart = null;
-      redraw();
+      scheduleRerender();
+      requestDraw();
+    } else if(state.pointers.size === 1){
+      // Just exited pinch — leave the remaining finger inert until lifted+down again
+      state.panStart = null;
     }
   }
 
   function finalizeDraft(){
     if(!state.draft) return;
-    if(state.draft.type === 'line' && state.draft.points.length === 2){
-      pushHistory();
-      state.measurements.push(state.draft);
-    } else if(state.draft.type === 'angle' && state.draft.points.length === 3){
-      pushHistory();
-      state.measurements.push(state.draft);
-    } else if(state.draft.type === 'poly' && state.draft.points.length >= 3 && state.draft.closed){
-      pushHistory();
-      state.measurements.push(state.draft);
-    }
+    if(state.draft.type==='line' && state.draft.points.length===2){ pushHistory(); state.measurements.push(state.draft); }
+    else if(state.draft.type==='angle' && state.draft.points.length===3){ pushHistory(); state.measurements.push(state.draft); }
+    else if(state.draft.type==='poly' && state.draft.points.length>=3 && state.draft.closed){ pushHistory(); state.measurements.push(state.draft); }
     state.draft = null;
-    redraw();
-    saveSession();
+    requestDraw(); saveSession();
   }
-
-  function pushHistory(){
-    state.history.push(JSON.stringify(state.measurements));
-    if(state.history.length > 50) state.history.shift();
-  }
+  function pushHistory(){ state.history.push(JSON.stringify(state.measurements)); if(state.history.length>50) state.history.shift(); }
   function undo(){
-    if(state.draft){ state.draft = null; redraw(); return; }
+    if(state.draft){ state.draft=null; requestDraw(); return; }
     const last = state.history.pop();
-    if(!last) { toast('Nichts rückgängig zu machen'); return; }
+    if(!last){ toast('Nichts rückgängig zu machen'); return; }
     state.measurements = JSON.parse(last);
-    redraw(); saveSession();
+    requestDraw(); saveSession();
   }
-
   function nid(){ return 'm'+Date.now().toString(36)+Math.random().toString(36).substring(2,5); }
 
-  // double-tap to fit
-  wrap.addEventListener('pointerdown', (e)=>{
-    const now = Date.now();
-    if(now - state.lastTap < 300 && state.pointers.size <= 1 && state.tool === 'pan'){
-      fitToScreen();
-    }
-    state.lastTap = now;
-  });
+  // === Bind events ==========================================================
+  wrap.addEventListener('pointerdown', onPointerDown, { passive: false });
+  wrap.addEventListener('pointermove', onPointerMove, { passive: false });
+  wrap.addEventListener('pointerup', onPointerUp);
+  wrap.addEventListener('pointercancel', onPointerUp);
+  wrap.addEventListener('lostpointercapture', (e)=>{ state.pointers.delete(e.pointerId); state.pinch = null; state.panStart = null; });
 
-  wrap.addEventListener('pointerdown', pointerDown);
-  wrap.addEventListener('pointermove', pointerMove);
-  wrap.addEventListener('pointerup', pointerUp);
-  wrap.addEventListener('pointercancel', pointerUp);
-
-  // wheel zoom (for desktop testing)
   wrap.addEventListener('wheel', (e)=>{
     if(!state.pdf) return;
     e.preventDefault();
-    const delta = -e.deltaY * 0.0015;
-    const factor = Math.exp(delta);
     const r = wrap.getBoundingClientRect();
     const px = e.clientX - r.left, py = e.clientY - r.top;
-    const pdfX = (px - state.view.tx) / state.view.zoom;
-    const pdfY = (py - state.view.ty) / state.view.zoom;
+    const factor = Math.exp(-e.deltaY * 0.0015);
+    const pdf = screenToPdf(px, py);
     state.view.zoom = Math.max(0.05, Math.min(40, state.view.zoom * factor));
-    state.view.tx = px - pdfX*state.view.zoom;
-    state.view.ty = py - pdfY*state.view.zoom;
-    applyTransform();
-    redraw();
-    updateStatus();
-  }, {passive:false});
+    state.view.tx = px - pdf.x * state.view.zoom;
+    state.view.ty = py - pdf.y * state.view.zoom;
+    requestDraw(); scheduleRerender(); updateStatus();
+  }, { passive:false });
 
   // === Tool buttons =========================================================
-  document.querySelectorAll('.tool[data-tool]').forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      setTool(btn.dataset.tool);
-    });
-  });
+  document.querySelectorAll('.tool[data-tool]').forEach(btn=>btn.addEventListener('click', ()=> setTool(btn.dataset.tool)));
   function setTool(t){
-    state.tool = t;
-    state.draft = null;
-    state.drag = null;
-    state.calibrating = false;
-    state.calLine = null;
-    document.querySelectorAll('.tool[data-tool]').forEach(b=>{
-      b.classList.toggle('active', b.dataset.tool===t);
-    });
+    state.tool = t; state.draft = null; state.drag = null;
+    state.calibrating = false; state.calLine = null;
+    document.querySelectorAll('.tool[data-tool]').forEach(b=>b.classList.toggle('active', b.dataset.tool===t));
     if(t==='line') showHint('Tippe Anfang & Ende, oder ziehe');
-    else if(t==='poly') showHint('Punkte tippen · Tippe ersten Punkt um zu schließen');
-    else if(t==='angle') showHint('3 Punkte tippen: Schenkel A, Scheitel, Schenkel B');
+    else if(t==='poly') showHint('Punkte tippen · Ersten Punkt erneut tippen zum Schließen');
+    else if(t==='angle') showHint('3 Punkte: Schenkel A, Scheitel, Schenkel B');
     else if(t==='edit') showHint('Endpunkte ziehen');
     else clearHint();
     setTimeout(clearHint, 3500);
-    redraw();
-    updateStatus();
+    requestDraw(); updateStatus();
   }
 
   $('btnUndo').addEventListener('click', undo);
@@ -1088,68 +935,50 @@
     $('btnSnap').classList.toggle('active', state.snap);
     saveSession(); updateStatus();
   });
-  $('btnSnap').classList.add('active');
-
   $('btnFit').addEventListener('click', fitToScreen);
   $('btnOpen').addEventListener('click', ()=>fileInput.click());
   fileInput.addEventListener('change', async (e)=>{
-    const f = e.target.files[0];
-    if(!f) return;
+    const f = e.target.files[0]; if(!f) return;
     const buf = await f.arrayBuffer();
     await loadPdfFromArrayBuffer(buf, f.name);
-    fileInput.value = '';
+    fileInput.value='';
   });
-
-  $('pagePrev').addEventListener('click', async ()=>{
-    if(state.pageNum > 1){ state.pageNum--; updatePageLabel(); await renderPage(); fitToScreen(); saveSession(); }
-  });
-  $('pageNext').addEventListener('click', async ()=>{
-    if(state.pageNum < state.pageCount){ state.pageNum++; updatePageLabel(); await renderPage(); fitToScreen(); saveSession(); }
-  });
+  $('pagePrev').addEventListener('click', ()=>changePage(-1));
+  $('pageNext').addEventListener('click', ()=>changePage(+1));
 
   // === Calibrate ============================================================
-  $('btnCalibrate').addEventListener('click', openCalModal);
-  function openCalModal(){
+  $('btnCalibrate').addEventListener('click', ()=>{
     updateScaleDisplay();
-    $('manualScale').value = state.scaleNum || '';
-    $('manualDpi').value = state.scaleDpi || 72;
-    document.querySelectorAll('#calModal [data-scale]').forEach(b=>{
-      b.classList.toggle('active', String(state.scaleNum) === b.dataset.scale);
-    });
+    $('manualScale').value = state.scaleNum||'';
+    $('manualDpi').value = state.scaleDpi||72;
+    document.querySelectorAll('#calModal [data-scale]').forEach(b=>b.classList.toggle('active', String(state.scaleNum)===b.dataset.scale));
     $('calModal').classList.add('show');
-  }
+  });
   function updateScaleDisplay(){
     const el = $('scaleDisplay');
     if(state.scaleNum) el.innerHTML = `Maßstab <span class="num">1:${state.scaleNum}</span> @ ${state.scaleDpi} DPI`;
     else el.innerHTML = `<span class="uncalibrated">Nicht kalibriert</span>`;
   }
   $('calClose').addEventListener('click', ()=>$('calModal').classList.remove('show'));
-  document.querySelectorAll('#calModal [data-scale]').forEach(b=>{
-    b.addEventListener('click', ()=>{
-      $('manualScale').value = b.dataset.scale;
-      document.querySelectorAll('#calModal [data-scale]').forEach(x=>x.classList.remove('active'));
-      b.classList.add('active');
-    });
-  });
+  document.querySelectorAll('#calModal [data-scale]').forEach(b=>b.addEventListener('click', ()=>{
+    $('manualScale').value = b.dataset.scale;
+    document.querySelectorAll('#calModal [data-scale]').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+  }));
   $('calApply').addEventListener('click', ()=>{
     const sc = parseFloat($('manualScale').value);
     const dpi = parseFloat($('manualDpi').value)||72;
     if(!sc || sc<1){ toast('Bitte gültigen Maßstab eingeben','err'); return; }
-    state.scaleNum = sc;
-    state.scaleDpi = dpi;
-    saveSession();
-    updateStatus();
-    redraw();
+    state.scaleNum = sc; state.scaleDpi = dpi;
+    saveSession(); updateStatus(); requestDraw();
     $('calModal').classList.remove('show');
-    toast('Maßstab 1:' + sc + ' gesetzt','ok');
+    toast('Maßstab 1:'+sc+' gesetzt','ok');
   });
   $('btnCalibrateLine').addEventListener('click', ()=>{
     $('calModal').classList.remove('show');
-    state.calibrating = true;
-    state.calLine = null;
+    state.calibrating = true; state.calLine = null;
     showHint('Bekannte Strecke abmessen — z. B. eine Bemaßung');
   });
-
   function openCalStep(){
     state.calibrating = false;
     $('calRealLength').value = '';
@@ -1157,169 +986,115 @@
   }
   $('calStepCancel').addEventListener('click', ()=>{
     $('calStepModal').classList.remove('show');
-    state.calLine = null;
-    redraw();
-    clearHint();
+    state.calLine = null; requestDraw(); clearHint();
   });
   $('calStepApply').addEventListener('click', ()=>{
     const val = parseFloat($('calRealLength').value);
     const unit = $('calUnit').value;
     if(!val || val<=0){ toast('Bitte gültige Länge eingeben','err'); return; }
-    let realCm = val * 100;
-    if(unit==='cm') realCm = val;
-    if(unit==='mm') realCm = val/10;
-    const a = state.calLine[0], b = state.calLine[1];
+    let realCm = val*100; if(unit==='cm') realCm=val; if(unit==='mm') realCm=val/10;
+    const a=state.calLine[0], b=state.calLine[1];
     const pdfPts = Math.hypot(b.x-a.x, b.y-a.y);
     if(!pdfPts){ toast('Linie zu kurz','err'); return; }
-    // realCm = pdfPts * (2.54/dpi) * scaleNum  =>  scaleNum = realCm * dpi / (pdfPts*2.54)
-    const dpi = state.scaleDpi || 72;
-    state.scaleNum = realCm * dpi / (pdfPts * 2.54);
-    // round nicely if close to common scale
+    const dpi = state.scaleDpi||72;
+    state.scaleNum = realCm * dpi / (pdfPts*2.54);
     const round = [10,20,25,50,75,100,150,200,250,500,1000];
-    for(const r of round){
-      if(Math.abs(state.scaleNum - r)/r < 0.02){ state.scaleNum = r; break; }
-    }
+    for(const r of round){ if(Math.abs(state.scaleNum-r)/r < 0.02){ state.scaleNum = r; break; } }
     state.scaleNum = Math.round(state.scaleNum*10)/10;
-    state.calLine = null;
-    saveSession();
-    updateStatus();
-    redraw();
-    clearHint();
+    state.calLine = null; saveSession(); updateStatus(); requestDraw(); clearHint();
     $('calStepModal').classList.remove('show');
-    toast('Maßstab kalibriert: 1:' + state.scaleNum,'ok');
+    toast('Maßstab kalibriert: 1:'+state.scaleNum,'ok');
   });
 
   // === Layers ===============================================================
-  $('btnLayers').addEventListener('click', openLayerModal);
-  function openLayerModal(){ renderLayerList(); renderColorPalette(); $('layerModal').classList.add('show'); }
+  $('btnLayers').addEventListener('click', ()=>{ renderLayerList(); renderColorPalette(); $('layerModal').classList.add('show'); });
   $('layerClose').addEventListener('click', ()=>$('layerModal').classList.remove('show'));
   $('btnAddLayer').addEventListener('click', ()=>{
     const id = 'l'+Date.now().toString(36);
     const used = state.layers.map(l=>l.color);
     const col = PALETTE.find(c=>!used.includes(c)) || PALETTE[state.layers.length%PALETTE.length];
-    state.layers.push({ id, name: 'Ebene '+(state.layers.length+1), color: col, visible: true });
+    state.layers.push({ id, name:'Ebene '+(state.layers.length+1), color:col, visible:true });
     state.activeLayer = id;
-    renderLayerList(); renderColorPalette(); saveSession(); redraw();
+    renderLayerList(); renderColorPalette(); saveSession(); requestDraw();
   });
   function renderLayerList(){
-    const list = $('layerList');
-    list.innerHTML = '';
+    const list = $('layerList'); list.innerHTML='';
     state.layers.forEach(l=>{
       const row = document.createElement('div');
       row.className = 'layer-row' + (l.id===state.activeLayer?' active':'');
       row.innerHTML = `
-        <div class="layer-swatch" style="background:${l.color}" title="Farbe wählen unten"></div>
+        <div class="layer-swatch" style="background:${l.color}"></div>
         <input class="layer-name" value="${escapeHtml(l.name)}" />
-        <button class="layer-vis ${l.visible?'':'hidden'}" title="Sichtbarkeit">
-          ${l.visible
-            ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>'
-            : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>'}
-        </button>
-        <button class="layer-del" title="Löschen">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
-        </button>
+        <button class="layer-vis">${l.visible
+          ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>'
+          : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>'}</button>
+        <button class="layer-del"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></button>
       `;
-      row.addEventListener('click', (e)=>{
-        if(e.target.closest('input,button')) return;
-        state.activeLayer = l.id; renderLayerList(); renderColorPalette();
-      });
-      row.querySelector('.layer-name').addEventListener('change', (e)=>{ l.name = e.target.value; saveSession(); });
-      row.querySelector('.layer-vis').addEventListener('click', ()=>{ l.visible = !l.visible; renderLayerList(); redraw(); saveSession(); });
+      row.addEventListener('click', e=>{ if(e.target.closest('input,button')) return; state.activeLayer=l.id; renderLayerList(); renderColorPalette(); });
+      row.querySelector('.layer-name').addEventListener('change', e=>{ l.name=e.target.value; saveSession(); });
+      row.querySelector('.layer-vis').addEventListener('click', ()=>{ l.visible = !l.visible; renderLayerList(); requestDraw(); saveSession(); });
       row.querySelector('.layer-del').addEventListener('click', ()=>{
         if(state.layers.length===1){ toast('Mindestens eine Ebene wird benötigt','err'); return; }
         if(!confirm('Ebene "'+l.name+'" und alle Messungen darin löschen?')) return;
         pushHistory();
-        state.measurements = state.measurements.filter(m=>m.layerId !== l.id);
-        state.layers = state.layers.filter(x=>x.id !== l.id);
-        if(state.activeLayer === l.id) state.activeLayer = state.layers[0].id;
-        renderLayerList(); renderColorPalette(); redraw(); saveSession();
+        state.measurements = state.measurements.filter(m=>m.layerId!==l.id);
+        state.layers = state.layers.filter(x=>x.id!==l.id);
+        if(state.activeLayer===l.id) state.activeLayer = state.layers[0].id;
+        renderLayerList(); renderColorPalette(); requestDraw(); saveSession();
       });
       list.appendChild(row);
     });
   }
   function renderColorPalette(){
-    const pal = $('colorPalette');
-    pal.innerHTML = '';
+    const pal = $('colorPalette'); pal.innerHTML='';
     const layer = state.layers.find(l=>l.id===state.activeLayer);
     PALETTE.forEach(c=>{
       const d = document.createElement('div');
       d.className = 'color-dot' + (layer && layer.color===c?' selected':'');
       d.style.background = c;
-      d.addEventListener('click', ()=>{
-        if(layer){ layer.color = c; renderLayerList(); renderColorPalette(); redraw(); saveSession(); }
-      });
+      d.addEventListener('click', ()=>{ if(layer){ layer.color=c; renderLayerList(); renderColorPalette(); requestDraw(); saveSession(); } });
       pal.appendChild(d);
     });
   }
   function escapeHtml(s){ return s.replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[m])); }
 
-  // === Measurements list ====================================================
-  $('btnList').addEventListener('click', openListModal);
-  function openListModal(){ renderMeasList(); $('listModal').classList.add('show'); }
+  // === Measurement list =====================================================
+  $('btnList').addEventListener('click', ()=>{ renderMeasList(); $('listModal').classList.add('show'); });
   $('listClose').addEventListener('click', ()=>$('listModal').classList.remove('show'));
   $('btnClearAll').addEventListener('click', ()=>{
     if(!state.measurements.length) return;
     if(!confirm('Alle Messungen löschen?')) return;
-    pushHistory();
-    state.measurements = [];
-    renderMeasList(); redraw(); saveSession();
+    pushHistory(); state.measurements = []; renderMeasList(); requestDraw(); saveSession();
   });
-
   function renderMeasList(){
-    const list = $('measList');
-    list.innerHTML = '';
-    if(!state.measurements.length){
-      $('measSummary').textContent = 'Noch keine Messungen';
-      return;
-    }
-    let totalLen = 0, totalArea = 0, hasNoScale = !state.scaleNum;
+    const list = $('measList'); list.innerHTML='';
+    if(!state.measurements.length){ $('measSummary').textContent='Noch keine Messungen'; return; }
+    let totalLen=0, totalArea=0, hasNoScale=!state.scaleNum;
     state.measurements.forEach(m=>{
       const layer = state.layers.find(l=>l.id===m.layerId);
-      const col = layer?.color || '#888';
+      const col = layer?.color||'#888';
       let label='';
-      if(m.type==='line'){
-        const d = realDistance(m.points[0], m.points[1]);
-        if(d!=null) totalLen += d;
-        label = formatLength(d);
-      } else if(m.type==='angle'){
-        const a = angleDeg(m.points[0],m.points[1],m.points[2]);
-        label = a.toFixed(2) + '°';
-      } else if(m.type==='poly'){
-        const a = polygonArea(m.points);
-        const p = polygonPerimeter(m.points);
-        if(a!=null) totalArea += a;
-        label = formatArea(a) + ' · U=' + formatLength(p);
-      }
-      const row = document.createElement('div');
-      row.className = 'meas-item';
-      row.innerHTML = `
-        <span class="col" style="background:${col}"></span>
-        <span class="type">${m.type==='line'?'Linie':m.type==='poly'?'Fläche':'Winkel'}</span>
-        <span class="val">${escapeHtml(label)}</span>
-        <button title="Löschen">✕</button>
-      `;
-      row.querySelector('button').addEventListener('click', ()=>{
-        pushHistory();
-        state.measurements = state.measurements.filter(x=>x.id!==m.id);
-        renderMeasList(); redraw(); saveSession();
-      });
+      if(m.type==='line'){ const d=realDistance(m.points[0],m.points[1]); if(d!=null) totalLen+=d; label=formatLength(d); }
+      else if(m.type==='angle'){ label=angleDeg(m.points[0],m.points[1],m.points[2]).toFixed(2)+'°'; }
+      else if(m.type==='poly'){ const a=polygonArea(m.points); const p=polygonPerimeter(m.points); if(a!=null) totalArea+=a; label=formatArea(a)+' · U='+formatLength(p); }
+      const row=document.createElement('div'); row.className='meas-item';
+      row.innerHTML=`<span class="col" style="background:${col}"></span><span class="type">${m.type==='line'?'Linie':m.type==='poly'?'Fläche':'Winkel'}</span><span class="val">${escapeHtml(label)}</span><button>✕</button>`;
+      row.querySelector('button').addEventListener('click', ()=>{ pushHistory(); state.measurements=state.measurements.filter(x=>x.id!==m.id); renderMeasList(); requestDraw(); saveSession(); });
       list.appendChild(row);
     });
-    let summary = '';
-    if(hasNoScale) summary = '⚠ Kein Maßstab gesetzt — Längen werden nicht berechnet';
-    else summary = `Σ Längen: ${formatLength(totalLen)} · Σ Flächen: ${formatArea(totalArea)} · ${state.measurements.length} Einträge`;
-    $('measSummary').textContent = summary;
+    $('measSummary').textContent = hasNoScale
+      ? '⚠ Kein Maßstab gesetzt — Längen werden nicht berechnet'
+      : `Σ Längen: ${formatLength(totalLen)} · Σ Flächen: ${formatArea(totalArea)} · ${state.measurements.length} Einträge`;
   }
-
   $('btnExport').addEventListener('click', ()=>{
     const lines = ['Typ\tEbene\tWert\tWert2\tPunkte'];
     for(const m of state.measurements){
       const layer = state.layers.find(l=>l.id===m.layerId);
-      const ln = layer?.name || '-';
-      let v1='',v2='';
-      if(m.type==='line'){ v1=formatLength(realDistance(m.points[0],m.points[1])); }
-      else if(m.type==='angle'){ v1 = angleDeg(m.points[0],m.points[1],m.points[2]).toFixed(2)+'°'; }
-      else if(m.type==='poly'){ v1=formatArea(polygonArea(m.points)); v2='U='+formatLength(polygonPerimeter(m.points)); }
+      const ln = layer?.name||'-';
+      let v1='', v2='';
+      if(m.type==='line') v1 = formatLength(realDistance(m.points[0], m.points[1]));
+      else if(m.type==='angle') v1 = angleDeg(m.points[0],m.points[1],m.points[2]).toFixed(2)+'°';
+      else if(m.type==='poly'){ v1 = formatArea(polygonArea(m.points)); v2 = 'U='+formatLength(polygonPerimeter(m.points)); }
       const pts = m.points.map(p=>`(${p.x.toFixed(1)},${p.y.toFixed(1)})`).join(' ');
       lines.push(`${m.type}\t${ln}\t${v1}\t${v2}\t${pts}`);
     }
@@ -1327,26 +1102,26 @@
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
     a.download = (state.pdfName.replace(/\.pdf$/i,'')||'messungen') + '_messungen.tsv';
-    a.click();
-    URL.revokeObjectURL(a.href);
+    a.click(); URL.revokeObjectURL(a.href);
     toast('Export gespeichert','ok');
   });
 
-  // === Window resize ========================================================
+  // === Resize ===============================================================
+  let resizeTm;
   window.addEventListener('resize', ()=>{
-    if(state.pdf) applyTransform();
+    clearTimeout(resizeTm);
+    resizeTm = setTimeout(()=>{ resizeCanvases(); requestDraw(); scheduleRerender(); }, 80);
   });
 
   // === Init =================================================================
   loadSession();
+  resizeCanvases();
   updateStatus();
   $('btnSnap').classList.toggle('active', state.snap);
   $('snapLbl').textContent = state.snap?'SNAP':'Snap aus';
+  draw();
 
-  // Service worker
-  if('serviceWorker' in navigator){
-    navigator.serviceWorker.register('sw.js').catch(()=>{});
-  }
+  if('serviceWorker' in navigator){ navigator.serviceWorker.register('sw.js').catch(()=>{}); }
 </script>
 </body>
 </html>
