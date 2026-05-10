@@ -1,5 +1,5 @@
-// PlanMess service worker — offline cache for app shell + PDF.js CDN
-const CACHE = 'planmess-v1';
+// PlanMess service worker — offline cache for app shell + PDF.js + pdf-lib CDN
+const CACHE = 'planmess-v2';
 const SHELL = [
   './',
   './index.html',
@@ -8,7 +8,8 @@ const SHELL = [
   './icon-512.png',
   './icon-maskable-512.png',
   'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.min.mjs',
-  'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.worker.min.mjs'
+  'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.worker.min.mjs',
+  'https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js'
 ];
 
 self.addEventListener('install', (e) => {
